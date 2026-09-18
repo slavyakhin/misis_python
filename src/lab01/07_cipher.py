@@ -1,5 +1,8 @@
+BLUE = '\033[34m'
+RESET = '\033[0m'
+
 def main():
-    s = input()
+    s = input(f'{BLUE}in{RESET}: ')
     result = ''
 
     i = 0
@@ -38,7 +41,7 @@ def main():
     if result[len(result)-1] != '.':
         raise ValueError("No period")
 
-    print(result)
+    print('out: ' + result)
 
 if __name__ == "__main__":
     main()
