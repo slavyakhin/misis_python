@@ -1,10 +1,10 @@
 def main():
-    n = int(input())
+    n = int(input('in_1: '))
     nLan = 0
-    for _ in range(n):
-        if input().split()[3].strip().lower() == "true":
+    for i in range(2, n + 2):
+        if input(f'in_{i}: ').split()[3].strip().lower() == "true":
             nLan += 1
-    print(nLan, n-nLan, sep=' ')
+    print(f'out: {nLan} {n-nLan}')
 
 if __name__ == "__main__":
     main()
