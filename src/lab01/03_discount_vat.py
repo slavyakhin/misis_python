@@ -1,5 +1,5 @@
 def main():
-    price, discount, vat = map(lambda keyValue: int(keyValue.split("=")[1]), input().split(', '))
+    price, discount, vat = map(lambda keyValue: float(keyValue.split("=")[1]), input().split(', '))
 
     base = price * (1 - discount/100)
     vat_amount = base * (vat / 100)
