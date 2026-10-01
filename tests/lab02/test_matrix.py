@@ -2,6 +2,8 @@ import pytest
 from src.lab02.matrix import transpose, row_sums, col_sums
 
 
+# ----------------- transpose -----------------
+# --------------- Default tests ---------------
 @pytest.mark.parametrize(
     "a, expected",
     [
@@ -18,7 +20,22 @@ def test_transpose_jagged_array():
     with pytest.raises(ValueError):
         transpose([[1, 2], [3]])
 
+# --------------- Custom tests ---------------
+@pytest.mark.parametrize(
+    "a",
+    [
+        "string",
+        (),
+        ["string", 42],        
+    ],
+)
+def test_additional_transpose_invalid_type(a):
+    with pytest.raises(TypeError):
+        transpose(a)
 
+
+# ----------------- row_sums ------------------
+# --------------- Default tests ---------------
 @pytest.mark.parametrize(
     "a, expected",
     [
@@ -34,7 +51,22 @@ def test_row_sums_jagged_array():
     with pytest.raises(ValueError):
         row_sums([[1, 2], [3]])
 
+# --------------- Custom tests ---------------
+@pytest.mark.parametrize(
+    "a",
+    [
+        "string",
+        (),
+        ["string", 42],        
+    ],
+)
+def test_additional_row_sums_invalid_type(a):
+    with pytest.raises(TypeError):
+        row_sums(a)
 
+
+# ----------------- col_sums ------------------
+# --------------- Default tests ---------------
 @pytest.mark.parametrize(
     "a, expected",
     [
@@ -50,3 +82,15 @@ def test_col_sums_jagged_array():
     with pytest.raises(ValueError):
         col_sums([[1, 2], [3]])
 
+# --------------- Custom tests ---------------
+@pytest.mark.parametrize(
+    "a",
+    [
+        "string",
+        (),
+        ["string", 42],        
+    ],
+)
+def test_additional_col_sums_invalid_type(a):
+    with pytest.raises(TypeError):
+        col_sums(a)
