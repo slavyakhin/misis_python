@@ -1,11 +1,11 @@
 def transpose(mat: list[list[float | int]]) -> list[list]:
     '''return transposed matrix'''
 
+    if not isinstance(mat, list):
+        raise TypeError("mat must be list")
     if not mat:
         return []
 
-    if not isinstance(mat, list):
-        raise TypeError("mat must be list")
     if not all(isinstance(x, list) for x in mat):
         raise TypeError("all elements must be list (rows)")
     if not all(len(row) == len(mat[0]) for row in mat):
@@ -22,11 +22,11 @@ def transpose(mat: list[list[float | int]]) -> list[list]:
 def row_sums(mat: list[list[float | int]]) -> list[float]:
     '''return list, each element is sum of row elements'''
 
+    if not isinstance(mat, list):
+        raise TypeError("mat must be list")
     if not mat:
         return []
 
-    if not isinstance(mat, list):
-        raise TypeError("mat must be list")
     if not all(isinstance(x, list) for x in mat):
         raise TypeError("all elements must be list (rows)")
     if not all(len(row) == len(mat[0]) for row in mat):
@@ -47,11 +47,11 @@ def row_sums(mat: list[list[float | int]]) -> list[float]:
 def col_sums(mat: list[list[float | int]]) -> list[float]:
     '''return list, each element is sum of column elements'''
 
+    if not isinstance(mat, list):
+        raise TypeError("mat must be list")
     if not mat:
         return []
 
-    if not isinstance(mat, list):
-        raise TypeError("mat must be list")
     if not all(isinstance(x, list) for x in mat):
         raise TypeError("all elements must be list (rows)")
     if not all(len(row) == len(mat[0]) for row in mat):
