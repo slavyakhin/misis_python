@@ -18,7 +18,7 @@ def __merge(
 
     i, j = 0, 0
     while i < len(A) and j < len(B):
-        if (key(A[i]) < key(B[j])) != reverse:
+        if (key(A[i]) < key(B[j])) != reverse: # type: ignore
             result.append(A[i])
             i += 1
         else:
