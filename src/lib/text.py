@@ -42,7 +42,7 @@ def tokenize(text: str) -> list[str]:
     if not isinstance(text, str):
         raise TypeError("text must be string")
 
-    tokens = list(findall(TOKEN_PATTERN, text))
+    tokens = findall(TOKEN_PATTERN, text)
 
     return tokens
 
