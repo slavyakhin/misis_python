@@ -1,7 +1,7 @@
 from re import findall
 from src.lib.merge_sort import merge_sorted
 
-TOKEN_PATTERN = r'\w+(?:-\w)*'
+TOKEN_PATTERN = r'\w+(?:-\w+)*'
 
 def normalize(text: str, *, casefold: bool = True, yo2e: bool = True) -> str:
     '''
@@ -71,7 +71,7 @@ def top_n(freq: dict[str, int], n: int = 5) -> list[tuple[str, int]]:
 
     If equal freq, dictionary order.
 
-    Uses heapq
+    Uses merge sort
     '''
 
     if not isinstance(freq, dict):
@@ -81,6 +81,10 @@ def top_n(freq: dict[str, int], n: int = 5) -> list[tuple[str, int]]:
 
     top_list = list(freq.items())
 
-    top_list = merge_sorted(top_list, key=lambda x: (x[1], x[0]), reverse=True)
+    # Due to merge sort is stable, we may apply two sorts to satisfy different sort orders for elements fields.
+    # Sort by secondary criteria - strings
+    top_list = merge_sorted(top_list, key=lambda x: x[0])
+    # Sort by main criteria - freqs
+    top_list = merge_sorted(top_list, key=lambda x: x[1], reverse=True)
 
     return top_list[:n]
