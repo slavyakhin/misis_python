@@ -37,7 +37,9 @@ def merge_sorted(
         reverse: bool = False
 ) -> list[T]:
     '''
-    Sorted copy of list using merge sort
+    Sorted copy of list using merge sort.
+
+    Merge sort is stable sort.
     
     elements (key(element) if key specified) must support '<' operator
     '''
