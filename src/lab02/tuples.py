@@ -37,6 +37,6 @@ def format_record(rec: Rec) -> str:
     if len(fio_list) < 2 or 3 < len(fio_list):
         raise ValueError("fio must contain 2 or 3 words")
 
-    fio_str = fio_list[0][0].upper() + fio_list[0][1:].lower() + ' ' + ''.join(name[0].upper() + '.' for name in fio_list[1:])
+    fio_str = fio_list[0].capitalize() + ' ' + ''.join(name[0].upper() + '.' for name in fio_list[1:])
 
     return f'{fio_str}, гр. {group_str}, GPA {rec[2]:.2f}'
