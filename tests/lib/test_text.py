@@ -17,6 +17,15 @@ def test_normalize(a, expected):
 
 
 # ------------- Custom tests --------------
+@pytest.mark.parametrize(
+    "a, expected",
+    [
+        ("ёжик, Ёлка", "ёжик, ёлка"),
+    ],
+)
+def test_normalize_no_yo2e(a, expected):
+    assert normalize(a, yo2e=False) == expected
+
 
 
 # --------------- tokenize ---------------
