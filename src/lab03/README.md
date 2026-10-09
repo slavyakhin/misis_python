@@ -49,6 +49,10 @@
 
     return top_list[:n]
 ```
+Другой вариант сортировки с лекции. Обратный порядок получается заменой чисел на отрицательные
+``` python
+    top_list = merge_sorted(top_list, key=lambda x: (-x[1], x[0]))
+```
 ![top_n_run](../../misc/img/lab03/top_n_run.png)
 
 ## Задание B — `src/text_stats.py` (скрипт со stdin)
