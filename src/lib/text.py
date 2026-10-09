@@ -81,10 +81,15 @@ def top_n(freq: dict[str, int], n: int = 5) -> list[tuple[str, int]]:
 
     top_list = list(freq.items())
 
+    # LEGACY
     # Due to merge sort is stable, we may apply two sorts to satisfy different sort orders for elements fields.
     # Sort by secondary criteria - strings
-    top_list = merge_sorted(top_list, key=lambda x: x[0])
+    #top_list = merge_sorted(top_list, key=lambda x: x[0])
     # Sort by main criteria - freqs
-    top_list = merge_sorted(top_list, key=lambda x: x[1], reverse=True)
+    #top_list = merge_sorted(top_list, key=lambda x: x[1], reverse=True)
+    # /LEGACY
+
+    # Sort by descenging x[1] and ascending x[0]
+    top_list = merge_sorted(top_list, key=lambda x: (-x[1], x[0]))
 
     return top_list[:n]
