@@ -1,4 +1,4 @@
-## 1/10 лаб загружена
+## 3/10 лаб загружены
 
 <p align="center">
   <img src="../misc/img/general_material/traveling.gif" />

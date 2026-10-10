@@ -1,3 +1,5 @@
+.vscode
+
 # staff
 /_staff
 
@@ -9,3 +11,6 @@
 # /src/lab08
 # /src/lab09
 # /src/lab10
+
+__pycache__/
+*.pyc
