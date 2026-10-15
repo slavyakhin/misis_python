@@ -11,6 +11,7 @@ import argparse
 from pathlib import Path
 from src.lab04.io_txt_csv import read_text, write_csv
 from src.lib.text import normalize, tokenize, count_freq, top_n
+from src.lib.merge_sort import merge_sorted
 from src.lab03.text_stats import print_summary
 
 ENCODING = "utf-8"
@@ -40,6 +41,8 @@ def main():
     output_dir_path = Path(args.output_dir)
 
     multiple_files = (len(in_path_list) > 1)
+    per_file_freqs = list()
+
     sum_freqs = dict()
 
     for cur_in_path in in_path_list:
@@ -49,34 +52,28 @@ def main():
         cur_tokens = tokenize(cur_str)
         cur_freqs = count_freq(cur_tokens)
 
-        cur_top = top_n(cur_freqs, len(cur_freqs))
+        per_file_freqs.extend([(cur_in_path.name, word, count) for word, count in cur_freqs.items()])
 
-        cur_report_filename = cur_in_path.stem + "_report.csv"
-        cur_output_path = output_dir_path / cur_report_filename
-        write_csv(rows=cur_top, path=cur_output_path, header=HEADER_TOTAL)
+        for word, count in cur_freqs.items():
+            sum_freqs[word] = sum_freqs.get(word, 0) + count
 
-        print(cur_report_filename)
-        print_summary(total_tokens=len(cur_tokens),
-                      unique_tokens=len(cur_freqs),
-                      table=cur_top[:TOP_QUANTITY])
-
-
-        if multiple_files:
-            print()
-            for word, count in cur_freqs.items():
-                sum_freqs[word] = sum_freqs.get(word, 0) + count
 
     if multiple_files:
-        sum_top = top_n(sum_freqs, len(sum_freqs))
+        per_file_freqs = merge_sorted(per_file_freqs, key= lambda x: (x[0], -x[2], x[1]))
 
-        SUM_REPORT_FILENAME = "report_total.csv"
-        sum_output_path = output_dir_path / SUM_REPORT_FILENAME
-        write_csv(rows=sum_top, path=sum_output_path, header=HEADER_TOTAL)
+        per_file_path = Path(args.per_file_path)
+        write_csv(rows=per_file_freqs, path=per_file_path, header=HEADER_PER_FILE)
 
-        print(SUM_REPORT_FILENAME)
-        print_summary(total_tokens=sum(sum_freqs.values()),
-                      unique_tokens=len(sum_freqs),
-                      table=sum_top[:TOP_QUANTITY])
+
+    sum_top = top_n(sum_freqs, len(sum_freqs))
+
+    total_path = Path(args.total_path)
+    write_csv(rows=sum_top, path=total_path, header=HEADER_TOTAL)
+
+    print(total_path.name)
+    print_summary(total_tokens=sum(sum_freqs.values()),
+                  unique_tokens=len(sum_freqs),
+                  table=sum_top[:TOP_QUANTITY])
 
 
 if __name__ == "__main__":

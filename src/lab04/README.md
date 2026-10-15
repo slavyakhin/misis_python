@@ -128,5 +128,8 @@ Path class из pathlib кросс-платформенно оперирует �
 
 #### Вариант как в ТЗ
 
-![text_report_d_legacy_run](../../misc/img/lab04/text_report_d_legacy_run.png)
+![text_report_d_input](../../misc/img/lab04/text_report_d_input.png)
 
+![text_report_d_run](../../misc/img/lab04/text_report_d_run.png)
+
+![text_report_d_csv](../../misc/img/lab04/text_report_d_csv.png)
