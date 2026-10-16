@@ -65,16 +65,28 @@ Path class из pathlib кросс-платформенно оперирует �
         cur_tokens = tokenize(cur_str)
         cur_freqs = count_freq(cur_tokens)
 
-        cur_top = top_n(cur_freqs, len(cur_freqs))
+        per_file_freqs.extend([(cur_in_path.name, word, count) for word, count in cur_freqs.items()])
 
-        cur_report_filename = cur_in_path.stem + "_report.csv"
-        cur_output_path = output_dir_path / cur_report_filename
-        write_csv(rows=cur_top, path=cur_output_path, header=HEADER)
+        for word, count in cur_freqs.items():
+            sum_freqs[word] = sum_freqs.get(word, 0) + count
 
-        print(cur_report_filename)
-        print_summary(total_tokens=len(cur_tokens),
-                      unique_tokens=len(cur_freqs),
-                      table=cur_top[:TOP_QUANTITY])
+
+    if multiple_files:
+        per_file_freqs = merge_sorted(per_file_freqs, key= lambda x: (x[0], -x[2], x[1]))
+
+        per_file_path = Path(args.per_file_path)
+        write_csv(rows=per_file_freqs, path=per_file_path, header=HEADER_PER_FILE)
+
+
+    sum_top = top_n(sum_freqs, len(sum_freqs))
+
+    total_path = Path(args.total_path)
+    write_csv(rows=sum_top, path=total_path, header=HEADER_TOTAL)
+
+    print(total_path.name)
+    print_summary(total_tokens=sum(sum_freqs.values()),
+                  unique_tokens=len(sum_freqs),
+                  table=sum_top[:TOP_QUANTITY])
 
 ```
 ### Тест A. Один файл (база)
