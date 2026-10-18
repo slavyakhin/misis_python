@@ -80,7 +80,7 @@ json.dump(..., ensure_ascii=False, indent=2)
 
 Конвертирует CSV в XLSX.
 
-Использовать openpyxl ИЛИ xlsxwriter.
+Используется openpyxl
 Первая строка CSV — заголовок.
 Лист называется "Sheet1".
 Колонки — автоширина по длине текста (не менее 8 символов).
