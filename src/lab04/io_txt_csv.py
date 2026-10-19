@@ -17,7 +17,7 @@ def read_text(path: str | Path, encoding: str = ENCODING)-> str:
     if not isinstance(path, str | PurePath):
         raise TypeError("path must be string or Path")
     if not isinstance(encoding, str):
-        raise TypeError("encoding must be strin")
+        raise TypeError("encoding must be string")
 
     p = Path(path)
     # FileNotFoundError and UnicodeDecodeError raises as in task

@@ -42,6 +42,21 @@ def print_summary(total_tokens: int, unique_tokens: int, table: list[tuple | lis
             print(f'{pair[0]}:{pair[1]}')   
 
 
+def print_stats(input_str: str, top: int = N, pretty: bool = True):
+    '''
+    print stats from string
+    '''
+
+    tokens = tokenize(normalize(input_str))
+    freq = count_freq(tokens)
+    table = top_n(freq, n=top)
+
+    print_summary(total_tokens=len(tokens),
+                  unique_tokens=len(freq),
+                  table=table,
+                  pretty=pretty)
+
+
 def main():
     '''
     Read input until EOF, print stats
