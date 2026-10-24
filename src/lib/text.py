@@ -78,6 +78,10 @@ def top_n(freq: dict[str, int], n: int = 5) -> list[tuple[str, int]]:
         raise TypeError("freq must be dict")
     if not all(isinstance(key, str) and isinstance(value, int) for key, value in freq.items()):
         raise TypeError("freq pairs must be [str, int]")
+    if not isinstance(n, int):
+        raise TypeError("n must be int")
+    if n < 1:
+        raise ValueError("n must be positive")
 
     top_list = list(freq.items())
 

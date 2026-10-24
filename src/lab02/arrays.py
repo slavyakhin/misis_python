@@ -48,7 +48,6 @@ def flatten(mat: list[list | tuple]) -> list:
 
     result = []
     for row in mat:
-        for element in row:
-            result.append(element) # any type allowed
+        result.extend(row) # any type allowed
 
     return result
