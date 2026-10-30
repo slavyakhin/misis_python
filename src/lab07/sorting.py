@@ -1,4 +1,4 @@
-def bubble_sort(nums) -> list:
+def bubble_sorted(nums) -> list:
     """ sorted list O(n^2).
     """
     nums_new = nums.copy()
@@ -16,7 +16,7 @@ def bubble_sort(nums) -> list:
     return nums_new
 
 
-def insertion_sort(nums) -> list:
+def insertion_sorted(nums) -> list:
     """ sorted list O(n^2).
     """
     nums_new = nums.copy()
@@ -28,7 +28,7 @@ def insertion_sort(nums) -> list:
     return nums_new
 
 
-def selection_sort(nums) -> list:
+def selection_sorted(nums) -> list:
     """ sorted list O(n^2).
     """
     nums_new = nums.copy()
@@ -45,7 +45,7 @@ def selection_sort(nums) -> list:
     return nums_new
 
 
-def merge_sort(nums) -> list:
+def merge_sorted(nums) -> list:
     """ sorted list O(nlong).
     Non recursive version.
     """
@@ -84,7 +84,7 @@ def merge_sort(nums) -> list:
     return nums_new
 
 
-def counting_sort(nums, lo, hi) -> list:
+def counting_sorted(nums, lo, hi) -> list:
     """ sorted list O(n).
     Counts ints from lo to hi inclusive.
     """

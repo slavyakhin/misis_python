@@ -18,9 +18,9 @@
 
 ---
 - Модуль `src/lab07/sorting.py`. Три сортировки, каждая **возвращает новый список** и не меняет исходный:
-    - `bubble_sort(nums) -> list`
-    - `insertion_sort(nums) -> list`
-    - `selection_sort(nums) -> list`
+    - `bubble_sorted(nums) -> list`
+    - `insertion_sorted(nums) -> list`
+    - `selection_sorted(nums) -> list`
 
     > **Без `sorted`, `.sort()`, `min`, `max` и других готовых функций внутри.**
 
@@ -140,7 +140,7 @@ Python делает порядка 10⁷ простых операций в се
 
 ```python
 import timeit
-t = timeit.timeit(lambda: bubble_sort(data), number=1)
+t = timeit.timeit(lambda: bubble_sorted(data), number=1)
 ```
 
 `number=1` — один запуск; для быстрых операций ставьте больше и делите. Данные
@@ -160,7 +160,7 @@ t = timeit.timeit(lambda: bubble_sort(data), number=1)
 
 ### B. Сортировки (`sorting.py`)
 
-- `bubble_sort`, `insertion_sort`, `selection_sort` — возвращают новый отсортированный список
+- `bubble_sorted`, `insertion_sorted`, `selection_sorted` — возвращают новый отсортированный список
 - исходный список не меняется — проверяется в `check.py`
 - пустой список и список из одного элемента — работают
 - (★ в пузырьке) флаг «обменов не было» — ранний выход на отсортированных данных
@@ -182,8 +182,8 @@ t = timeit.timeit(lambda: bubble_sort(data), number=1)
 
 ### ★ Дополнительное задание 
 
-- `merge_sort(nums)` **без рекурсии** — снизу вверх: сливаем пары соседних отрезков длины 1, 2, 4, …; добавить в бенчмарк и показать, что он ведёт себя как `sorted`, а не как пузырёк. Рекурсивная версия — после Л12, не сейчас
-- `counting_sort(nums, lo, hi)` для целых в известном диапазоне — и показать в бенчмарке случай, когда он **обгоняет** `sorted`
+- `merge_sorted(nums)` **без рекурсии** — снизу вверх: сливаем пары соседних отрезков длины 1, 2, 4, …; добавить в бенчмарк и показать, что он ведёт себя как `sorted`, а не как пузырёк. Рекурсивная версия — после Л12, не сейчас
+- `counting_sorted(nums, lo, hi)` для целых в известном диапазоне — и показать в бенчмарке случай, когда он **обгоняет** `sorted`
 - график из `bench.csv`: время от `n` для всех сортировок, ось Y — логарифмическая
 
 ---
@@ -232,23 +232,23 @@ def two_sum_fast(nums, target):
 ### `sorting.py`
 
 ``` python
-def bubble_sort(nums):
+def bubble_sorted(nums):
     """Новый список, отсортированный по возрастанию. Исходный не меняется.
  
-    bubble_sort([3, 1, 2]) -> [1, 2, 3]
-    bubble_sort([2, 2, 1]) -> [1, 2, 2]
-    bubble_sort([]) -> []
+    bubble_sorted([3, 1, 2]) -> [1, 2, 3]
+    bubble_sorted([2, 2, 1]) -> [1, 2, 2]
+    bubble_sorted([]) -> []
     """
     pass
  
  
-def insertion_sort(nums):
-    """Тот же контракт, что у bubble_sort."""
+def insertion_sorted(nums):
+    """Тот же контракт, что у bubble_sorted."""
     pass
  
  
-def selection_sort(nums):
-    """Тот же контракт, что у bubble_sort."""
+def selection_sorted(nums):
+    """Тот же контракт, что у bubble_sorted."""
     pass
 ```
 
@@ -266,7 +266,7 @@ def selection_sort(nums):
 
 ``` python
 import random
-from src.lab07.sorting import bubble_sort, insertion_sort, selection_sort
+from src.lab07.sorting import bubble_sorted, insertion_sorted, selection_sorted
  
  
 def check_sorting(fn, trials=100):
@@ -281,7 +281,7 @@ def check_sorting(fn, trials=100):
  
 if __name__ == "__main__":
     random.seed(42)
-    for fn in (bubble_sort, insertion_sort, selection_sort):
+    for fn in (bubble_sorted, insertion_sorted, selection_sorted):
         check_sorting(fn)
     # TODO: check_search(), check_two_sum()
     print("OK")

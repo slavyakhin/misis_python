@@ -1,5 +1,5 @@
 import random
-from src.lab07.sorting import bubble_sort, insertion_sort, selection_sort, merge_sort, counting_sort
+from src.lab07.sorting import bubble_sorted, insertion_sorted, selection_sorted, merge_sorted, counting_sorted
 from src.lab07.search import linear_search, binary_search, two_sum_brute, two_sum_fast 
  
 def check_sorting(fn, trials=100) -> None:
@@ -16,7 +16,7 @@ def check_sorting(fn, trials=100) -> None:
         assert nums == original, f"{fn.__name__} изменила исходный список"
 
 
-def check_counting_sort(fn, trials=100) -> None:
+def check_counting_sorted(fn, trials=100) -> None:
     """
     Generate and complete {trials} tests for counting sort
     """
@@ -75,9 +75,9 @@ def check_two_sum(trials=100) -> None:
 
 def main():
     random.seed(42)
-    for fn in (bubble_sort, insertion_sort, selection_sort, merge_sort):
+    for fn in (bubble_sorted, insertion_sorted, selection_sorted, merge_sorted):
         check_sorting(fn)
-    check_counting_sort(counting_sort)
+    check_counting_sorted(counting_sorted)
 
     for fn in (linear_search, binary_search):
         check_search(fn)

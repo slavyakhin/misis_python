@@ -1,0 +1,6 @@
+Algorithm,Complexity,n=10^3,n=10^4,n=10^5
+Timsort,O(n log n),0.0001,0.0013,0.0196
+Merge sort,O(n log n),0.0012,0.0152,0.2011
+Bubble sort,O(n^2),0.0286,3.0232,>60.0
+Insertion sort,O(n^2),0.0254,2.7626,>60.0
+Selection sort,O(n^2),0.0146,1.4898,>60.0

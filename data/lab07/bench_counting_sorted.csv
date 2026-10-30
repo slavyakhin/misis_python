@@ -1,0 +1,2 @@
+Algorithm,Complexity,n=10^3,n=10^4,n=10^5
+Counting sort,O(n),0.0022,0.0030,0.0087
