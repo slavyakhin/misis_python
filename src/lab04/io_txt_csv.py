@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from pathlib import Path, PurePath
 import csv
 
@@ -26,15 +27,15 @@ def read_text(path: str | Path, encoding: str = ENCODING)-> str:
     return result_str
 
 
-def write_csv(rows: list[tuple | list], path: str | Path, header: tuple[str, ...] | None = None) -> None:
+def write_csv(rows: Sequence[tuple | list], path: str | Path, header: tuple[str, ...] | None = None) -> None:
     '''
     Create or rewrite csv file.
 
     Creates parent dirs if they do not exist.
     '''
 
-    if not isinstance(rows, list) or not all(isinstance(row, tuple | list) for row in rows):
-        raise TypeError("rows must be list[tuple | list]")
+    if not all(isinstance(row, tuple | list) for row in rows):
+        raise TypeError("rows must be Sequence[tuple | list]")
     if not isinstance(path, str | PurePath):
         raise TypeError("path must be string or Path")
     if header is not None and (not isinstance(header, tuple) or not all(isinstance(s, str) for s in header)):
