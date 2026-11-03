@@ -1,0 +1,32 @@
+[
+    {
+        "fio": "Son Goku",
+        "birthdate": "1984-11-20",
+        "group": "Dragon Team",
+        "gpa": 4.4
+    },
+    {
+        "fio": "Naruto Uzumaki",
+        "birthdate": "1986-10-10",
+        "group": "Team 7",
+        "gpa": 2.7
+    },
+    {
+        "fio": "Ivanov Ivan Ivanovic",
+        "birthdate": "2000-01-01",
+        "group": "BIVT-18-4-2",
+        "gpa": 3.9
+    },
+    {
+        "fio": "Gpt Pavel Timofeevic",
+        "birthdate": "2022-11-30",
+        "group": "OpenAI",
+        "gpa": 4.0
+    },
+    {
+        "fio": "GNU's Not Unix",
+        "birthdate": "1984-09-27",
+        "group": "Unix",
+        "gpa": 5
+    }
+]
