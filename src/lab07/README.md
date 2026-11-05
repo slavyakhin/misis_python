@@ -1,11 +1,8 @@
 # ЛР7 — Поиск, сортировка и измерение времени
 
+# Задание A. Поиск (`search.py`)
 
-
-
-## Задание A. Поиск (`search.py`)
-
-### `linear_search(nums, x) -> int`
+## `linear_search(nums, x) -> int`
 — индекс первого вхождения, иначе `-1`
 
 ``` python
@@ -16,7 +13,7 @@
     return -1
 ```
 
-### `binary_search(sorted_nums, x) -> int`
+## `binary_search(sorted_nums, x) -> int`
 — индекс любого вхождения, иначе `-1`;
 
 ``` python
@@ -35,7 +32,7 @@
     return -1
 ```
  
-### `two_sum_brute(nums, target) -> tuple[int, int] | None`
+## `two_sum_brute(nums, target) -> tuple[int, int] | None`
 — пара индексов `(i, j)`, `i < j`, или `None`
 Решение за O(n^2)
 
@@ -48,7 +45,7 @@
     return None
 ```
 
-### `two_sum_fast(nums, target) tuple[int, int] | None`
+## `two_sum_fast(nums, target) tuple[int, int] | None`
 — то же через словарь за один проход; при нескольких ответах выбирается с самым маленьким вторым индексом j.
 
 ``` python
@@ -59,11 +56,11 @@
 
     return None
 ```
+<br><br>
 
-## Задание B. Сортировки (`sorting.py`)
+# Задание B. Сортировки (`sorting.py`)
 
-
-### `bubble_sorted(nums) -> list`
+## `bubble_sorted(nums) -> list`
 Сортировка пузырьком имеет квадратичную сложность O(n^2).
 
 Пока список не отсортирован, проходимся по нему, сравнивая пары соседов. Если пара не упорядочена, меняем соседей местами. Таким образом самый крупный неотсортированный элемент "всплывает" на своё место в конце списка. Конец списка отсортирован. Если нечего менять местами, весь список отсортирован.
@@ -80,7 +77,7 @@
         unsorted_count -= 1
 ```
 
-### `insertion_sorted(nums) - > list`
+## `insertion_sorted(nums) - > list`
 Сортировка вставками имеет квадратичную сложность O(n^2).
 
 Каждую итерацию добавляется элемент в отсортированный префикс списка. Каждый следующий элемент "вставляется" на нужное место - меняется с соседями за O(n).
@@ -94,7 +91,7 @@
                 nums_new[j], nums_new[j-1] = nums_new[j-1], nums_new[j]
 ```
 
-### `selection_sorted(nums) - > list`
+## `selection_sorted(nums) - > list`
 Сортировка выбором имеет квадратичную сложность O(n^2).
 
 Префикс отсортирован. n раз выбирается минимальный элемент за O(n) и меняется местами с элементом сразу после префикса.
@@ -110,7 +107,7 @@
         sorted_count += 1
 ```
 
-### `merge_sorted(nums) -> list` **без рекурсии**
+## `merge_sorted(nums) -> list` **без рекурсии**
 Сортировка слиянием имеет сложность O(nlogn)
 
 Слияние двух отсортированных списков имеет сложность O(n).
@@ -152,7 +149,7 @@
         section_len *= 2
 ```
 
-### `counting_sorted(nums, lo, hi)` для целых в известном диапазоне
+## `counting_sorted(nums, lo, hi)` для целых в известном диапазоне
 Сортировка подсчётом имеет сложность O(n), однако работает только если входные данные ограничены (варианты с хэш-функциями пока не рассматриваем).
 
 Для каждого значения храним количество его вхождений.
@@ -168,14 +165,15 @@
     for i, count in enumerate(counter):
         result.extend([i+lo] * count)
 ```
+<br><br>
 
-## Задание C. Проверка против эталона (`check.py`)
+# Задание C. Проверка против эталона (`check.py`)
 
 В ходе проверки `check` некоторые функции были доработаны. В особенности полезной оказалась сверка своего `binary_search` с `index`. Понадобилось как минимум 3 прогона, чтобы разобраться с upper_bound и lower_bound вариантами бинарного поиска. Результат бинпоиска варьируется в зависимости от строгости условия цикла `while(l < r)` или `while(l <= r)`, от условия в теле цикла и от выбора возвращаемого индекса `l` или `r`.
 
 Таким образом был выбран вариант `lower_bound` - первый в списке или первый больший.
 
-### `check_sorting(fn, trials=100) -> None`
+## `check_sorting(fn, trials=100) -> None`
 
 Генерирует случайные списки, выполняет данную сортовку, сравнивает результат с `sorted`
 ``` python
@@ -188,7 +186,7 @@
         assert nums == original, f"{fn.__name__} изменила исходный список"
 ```
 
-### `check_search() -> None`
+## `check_search() -> None`
 
 Генерирует случайные списки, случайно выбирает цель из списка или выбирает число вообще не из диапазона. В случаее, если числа нет в списке, `index` поднимает ошибку, проверяемые функции возвращают `-1`.
 
@@ -212,7 +210,7 @@
 ```
 
 
-### `check_two_sum(trials=100) -> None`
+## `check_two_sum(trials=100) -> None`
 
 Случайно выбирает пару числе из списка и складывает. Решения "two sum" могут быть разные, поэтому сравниваем только факт нахождения и сумму.
 
@@ -230,39 +228,204 @@
              or (result_brute is not None and result_fast is not None \
                  and nums[result_brute[0]] + nums[result_brute[1]] == nums[result_fast[0]] + nums[result_fast[1]]), f"результаты не совпадают на {nums}: {result_brute} != {result_fast}"
 ```
+<br><br>
 
-## Задание D. Бенчмарк (`bench.py`)
+# Задание D. Бенчмарк (`bench.py`)
 
-Скрипт, замеряющий время выполнения функций при помощи `timeit`.
+Модуль замеряющий время выполнения функций при помощи `timeit`.
 
-Для реализации __timeout__ функции `timeit` выполняются воркером в подпроцессе.
+## `_timeit_worker`
+Для реализации __timeout__  функция `timeit` выполняется воркером в подпроцессе. `timeit` выполняется для каждого запроса - пары `args, kwargs`.
+
+Timeit выполняет по **number** одинаковых запусков и суммирует их время выполнения, повторяет это **repeat** раз. Выбираем лучшее из **repeat** повторений и делим сумму на **number** - получаем среднее арифметическое время. Это позволяет минимизировать погрешность измерений и ошибки нестабильной системы. Однако стоит учитывать, что общее время исполнения увеличивается **в number * repeat раз**! Что критично для долгих алгоритмов и больших объёмов данных. Например для O(n^2) при n=10^5 будем использовать только одно измерение.
+
 ``` python
-    times = timeit.repeat(lambda: fn(*args), repeat=repeat, number=number)
-    best = min(times) / number
-    queue.put(best)
+def _timeit_worker(
+    writer_conn: Connection,
+    fn: Callable,
+    reqs: Sequence[tuple[tuple, dict]], # Sequence of pairs (args, kwargs)
+    number: int,
+    repeat: int,
+) -> None:
+    with writer_conn: # Close connection automatically
+        total_time = 0
+        for args, kwargs in reqs:
+            times = timeit.repeat(lambda: fn(*args, **kwargs), number=number, repeat=repeat)
+            best = min(times) / number
+            total_time += best
+            
+        writer_conn.send(total_time)
 ```
 
-В случае исхода данного __timeout__ поднимается исключение:
-``` python
-    process = mp.Process(target=fn_worker, args=(queue, *fn_args))
-    process.start()
-    process.join(timeout)
+## `exec_worker_with_timeout`
+Запускает на выполнение переданную функцию в дочернем процессе. В случае исхода __timeout__ поднимается исключение `TimeoutError`. Возвращает результат, переданный дочерним процессом в канал `mp.Pipe`.
 
-    if process.is_alive():
-        process.terminate()
+``` python
+def exec_worker_with_timeout(
+    worker: Callable,
+    args: tuple = (),
+    kwargs: dict = {},
+    timeout: float | int = TIMEOUT,
+):
+    reader_conn, writer_conn = mp.Pipe(duplex=False)
+
+    process = mp.Process(target=worker, args=(writer_conn, *args), kwargs=kwargs)
+
+    try:
+        process.start()
+        writer_conn.close()
+
+        if not reader_conn.poll(timeout):
+            raise TimeoutError("Timeout exceeded.")
+
+        try:
+            result = reader_conn.recv()
+        except EOFError:
+            raise RuntimeError("Worker process crashed before sending data.")
+
+        return result
+
+    finally:
+        reader_conn.close()
+        writer_conn.close()
+
+        if process.is_alive():
+            process.terminate()
+            process.join(timeout=1)
+
+        if process.is_alive():
+            process.kill()
+
         process.join()
-        raise TimeoutError("The execution exceeded the allowed time limit.")
-
-    return queue.get(timeout=1) if not queue.empty() else None
 ```
-queue передаётся для одного процесса, поэтому _состояния гонки_ не возникает.
 
-Данные генерируются дополнительным скриптом `src.lib.gen_numbers`
+## `src.lib.gen_numbers`
+Дополнительный скрипт для генерации входных данных
+
 ``` python
-    write_csv([(random.randint(min_value, max_value),) for _ in range(n)], out_path , header=HEADER)
+write_csv([(random.randint(min_value, max_value),) for _ in range(n)], out_path , header=HEADER)
+```
+<br><br>
+
+## `bench`
+
+Запускает один "тестовый случай" — **"test case"** (см. подзаголовок test case). Вызывает `exec_worker_with_timeout`, в качестве воркера `_timeit_worker`, в аргументы тестируемая функция и запросы.
+
+Возвращает время выполнения тестов или `None`, если истёк **timeout**.
+
+``` python
+def bench(
+    fn: Callable,
+    reqs: Sequence[tuple[tuple, dict]], # Sequence of pairs (args, kwargs)
+    repeat: int = REPEAT,
+    number: int = NUMBER,
+    timeout: float | int = TIMEOUT,
+) -> float | None:
+
+    try:
+        t = exec_worker_with_timeout(
+            worker=_timeit_worker,
+            kwargs={
+                "fn": fn,
+                "reqs": reqs,
+                "number": number,
+                "repeat": repeat
+            },
+            timeout=timeout
+            )
+        return t
+    except TimeoutError:
+        return None
 ```
 
-Табличный вывод в консоль выполняется f-строками `src.lib.fmt_table`
+## test cases
+Для удобного декларативного описания тестов определена структура `test` и `test case` - словари.
+
+- `test` — прообраз строки в отчетной таблице.
+
+- `test case` — прообраз ячейки в отчетной таблице.
+
+#### Спецификация test
+| Поле | Type hint | Значение | Пример |
+|------|-----------|----------|--------|
+| **"name"** | `str` | название теста | "O(n^2)" |
+| **"fn"** | `Callable`  | тестируемая функция | `bubble_sorted` |
+| **"complexity"** | `str` | сложность | "O(n^2)" |
+| **"cases"** | `list[test case]` | список тестовый случаев | см. таблицу о test case
+
+#### Спецификация test case
+| Поле | Type hint | Значение | Пример |
+|------|-----------|----------|--------|
+| **"name"** | `str` | название тестового случая (колонки таблицы) | "n=10^3" |
+| **"reqs"** | `list[tuple[tuple, dict]]` | список запросов - пар **(args, kwargs)** | `[((nums), {"lo": 10}), ((), {})]` |
+| **"args"** | `tuple` | **args** (в случае одного запроса) | `(nums)` |
+| **"kwargs"** | `dict` | **kwargs** (в случае одного запроса) | `{"lo": 10, "hi": 20}` |
+| **"number"** | `int` | `timeit` number | 5 |
+| **"repeat"** | `int` | `timeit` repeat | 10 |
+| **"timeout"** | `float \| int` | таймаут, секундд | 60 |
+
+``` python
+{
+    "name": "Bubble sort",
+    "fn": bubble_sorted,
+    "complexity": "O(n^2)",
+    "cases": [
+        {
+            "name": "n=10^3",
+            "kwargs": {"nums": numbers_s},
+            "number": 5,
+            "repeat": 10,
+        },
+        {
+            "name": "n=10^4",
+            "kwargs": {"nums": numbers_m},
+            "number": 2,
+            "repeat": 2,
+        },
+        {
+            "name": "n=10^5",
+            "kwargs": {"nums": numbers_l},
+            "number": 1,
+            "repeat": 1,
+        }
+    ],
+},
+```
+
+## main
+Скрипт `bench` выполняет тесты, выводит результаты в консоль, пишет в **csv** и строит график.
+
+```python
+    for i, line in enumerate(tests_table):
+        result_recs[i]["Algorithm"] = line["name"]
+        result_recs[i]["Complexity"] = line["complexity"]
+
+        for j, case in enumerate(line["cases"]):
+            t = bench(
+                fn=line["fn"],
+                reqs=case.get("reqs") or [(case.get("args", ()), case.get("kwargs", {}))],
+                number=case.get("number", NUMBER),
+                repeat=case.get("repeat", REPEAT),
+                timeout=case.get("timeout", args.timeout),
+            )
+
+            t_str = _fmt_time(t, args.timeout, spec=f".{args.precision}f")
+            result_recs[i][case["name"]] = t_str
+    
+    rows = recs_to_rows(result_recs)
+
+    print_table(rows)
+
+    if args.csv:
+        write_csv(rows, Path(args.csv_str))
+
+    if args.plot:
+        show_bench_plot(result_recs)
+```
+
+## `src.lib.fmt_table`
+Табличный вывод в консоль выполняется f-строками
+
 ``` python
     print(f"┌─{'─┬─'.join('─' * width for width in widths)}─┐")
     print(f"│ {' │ '.join(f'{value:^{widths[i]}}' for i, value in enumerate(rows[0]))} │")
@@ -280,18 +443,24 @@ queue передаётся для одного процесса, поэтому 
 
 Тогда как для `Timsort` асимптотика $O(nlong)$: $10n*log(10n) \approx 10n*log10n $ В разных случаях и для разных видов логарифмической сортировки могут быть разные погрешности порядка 10-30 раз.
 
-| Algorithm      | Complexity | n=10^3 | n=10^4 | n=10^5  |
-|----------------|------------|--------|--------|---------|
-| Timsort        | O(n log n) | 0.0001 | 0.0013 | 0.0196  |
-| Merge sort     | O(n log n) | 0.0012 | 0.0152 | 0.2011  |
-| Bubble sort    | O(n^2)     | 0.0286 | 3.0232 | >60.0   |
-| Insertion sort | O(n^2)     | 0.0254 | 2.7626 | >60.0   |
-| Selection sort | O(n^2)     | 0.0146 | 1.4898 | >60.0   |
-| Counting sort  | O(n)       | 0.0022 | 0.0030 | 0.0087  |
-| Linear search  | O(n)       | -      | -      | 14.6198 |
-| Binary search  | O(log n)   | -      | -      | 0.0111  |
-| Brute two sum  | O(n^2)     | 0.0065 | 0.2310 | -       |
-| Fast two sum   | O(n)       | 0.0001 | 0.0006 | -       |
+### Замеры
+`(.venv) slavyakhin@HP-Laptop:~/MISiS/misis_python$ python -m src.lab07.bench --timeout 2400 --csv --plot`
 
+Чтобы получить достоверный график выбран достаточно большой `timeout`, чтобы все алгоритмы полностью выполнились.
 
-график из `bench.csv`: время от `n` для всех сортировок, ось Y — логарифмическая
+|Algorithm     |Complexity|n=10^3|n=10^4 |n=10^5   |
+|--------------|----------|------|-------|---------|
+|Bubble sort   |O(n^2)    |0.0546|3.8320 |353.3997 |
+|Insertion sort|O(n^2)    |0.0257|2.9197 |331.4235 |
+|Selection sort|O(n^2)    |0.0144|1.6869 |192.7028 |
+|Tim sort      |O(n logn) |0.0001|0.0015 |0.0215   |
+|Merge sort    |O(n logn) |0.0012|0.0173 |0.2214   |
+|Counting sort |O(n)      |0.0026|0.0032 |0.0087   |
+|Linear search |O(n)      |-     |-      |1.9298   |
+|Binary search |O(n)      |-     |-      |0.0153   |
+|Two sum brute |O(n^2)    |0.2361|19.3090|1703.8976|
+|Two sum fast  |O(n)      |0.0016|0.0232 |0.1264   |
+
+На графике заметно как `Two sum fast` и `Counting sort` **O(n)** "обгоняет" `Merge_sort` и `Tim_sort` соответственно  **O(n logn)**  на достаточно больших данных.
+
+![plot](../../misc/img/lab07/plot.png)

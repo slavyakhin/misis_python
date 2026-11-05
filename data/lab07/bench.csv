@@ -1,11 +1,11 @@
 Algorithm,Complexity,n=10^3,n=10^4,n=10^5
-Timsort,O(n log n),0.0002,0.0027,0.0381
-Merge sort,O(n log n),0.0023,0.0306,0.4101
-Bubble sort,O(n^2),0.0541,4.2458,>60.0
-Insertion sort,O(n^2),0.0275,2.8361,>60.0
-Selection sort,O(n^2),0.0144,1.5765,>60.0
-Counting sort,O(n),0.0022,0.0031,0.0091
-Linear search,O(n),,,14.9237
-Binary search,O(log n),,,0.0128
-Brute,O(n^2),0.0063,0.2436,
-Fast,O(n),0.0001,0.0006,
+Bubble sort,O(n^2),0.0546,3.8320,353.3997
+Insertion sort,O(n^2),0.0257,2.9197,331.4235
+Selection sort,O(n^2),0.0144,1.6869,192.7028
+Tim sort,O(n logn),0.0001,0.0015,0.0215
+Merge sort,O(n logn),0.0012,0.0173,0.2214
+Counting sort,O(n),0.0026,0.0032,0.0087
+Linear search,O(n),-,-,1.9298
+Binary search,O(n),-,-,0.0153
+Two sum brute,O(n^2),0.2361,19.3090,1703.8976
+Two sum fast,O(n),0.0016,0.0232,0.1264
