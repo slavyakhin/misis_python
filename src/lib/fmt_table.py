@@ -1,5 +1,23 @@
 from collections.abc import Sequence
 
+
+def recs_to_rows(recs: list[dict], header: list | None = None) -> list[list]:
+    """
+    Convert list[dict] table to list[list] table.
+
+    Keys are first row.
+    """
+
+    if header is None:
+        header = list(dict.fromkeys([key for d in recs for key in d.keys()]))
+
+    rows = [header]
+    for rec in recs:
+        rows.append([ rec.get(header[i], "-") for i in range(len(header)) ])
+
+    return rows
+
+
 def print_table(rows: Sequence[Sequence]) -> None:
     """
     Print table using f-strings
