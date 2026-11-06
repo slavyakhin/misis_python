@@ -7,7 +7,7 @@ ENCODING = "utf-8"
 TITLE = "Sheet1"
 MIN_COL_WIDTH = 8
 
-def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
+def csv_to_xlsx(csv_path: str | Path, xlsx_path: str | Path) -> None:
     """
     Convert CSV into XLSX.
 
@@ -16,6 +16,16 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
     Sheet named "Sheet1".
     Columns — auto-width based on text length (at least 8 chars).
     """
+
+    csv_path = Path(csv_path)
+
+    if csv_path.suffix != ".csv":
+        raise ValueError('csv file must have ".csv" extenstion')
+
+    xlsx_path= Path(xlsx_path)
+
+    if xlsx_path.suffix != ".xlsx":
+        raise ValueError('.xlsx file must have ".xlsx" extenstion')
 
     wb = Workbook()
     ws = wb.active
@@ -27,8 +37,7 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
 
     column_widths = dict()
 
-    csv_path_path = Path(csv_path)
-    with csv_path_path.open(encoding=ENCODING) as f:
+    with csv_path.open(encoding=ENCODING) as f:
         for row in csv.reader(f):
             ws.append(row)
 
@@ -42,5 +51,4 @@ def csv_to_xlsx(csv_path: str, xlsx_path: str) -> None:
         print(column_widths[i])
         ws.column_dimensions[get_column_letter(i)].width = column_widths[i]
 
-    xlsx_path_path = Path(xlsx_path)
-    wb.save(xlsx_path_path)
+    wb.save(xlsx_path)
