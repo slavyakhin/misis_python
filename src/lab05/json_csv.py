@@ -5,7 +5,7 @@ from src.lab02.arrays import flatten
 ENCODING = "utf-8"
 
 
-def json_to_csv(json_path: str, csv_path: str) -> None:
+def json_to_csv(json_path: str | Path, csv_path: str | Path) -> None:
     """
     Convert JSON into CSV.
 
@@ -13,8 +13,18 @@ def json_to_csv(json_path: str, csv_path: str) -> None:
     Encoding UTF-8. Keys(columns) order - same as in input.
     """
 
-    json_path_path = Path(json_path)
-    with json_path_path.open(encoding=ENCODING) as f:
+    json_path = Path(json_path)
+
+    if json_path.suffix != ".json":
+        raise ValueError('json file must have ".json" extenstion')
+
+    csv_path = Path(csv_path)
+
+    if csv_path.suffix != ".csv":
+        raise ValueError('csv file must have ".csv" extenstion')
+
+
+    with json_path.open(encoding=ENCODING) as f:
         data = json.load(f)
 
     if not data:
@@ -31,14 +41,13 @@ def json_to_csv(json_path: str, csv_path: str) -> None:
             list(d.keys()) for d in data
             )))
 
-    csv_path_path = Path(csv_path)
-    with csv_path_path.open("w", encoding=ENCODING) as f:
+    with csv_path.open("w", encoding=ENCODING) as f:
         w = csv.DictWriter(f, headers)
         w.writeheader()
         w.writerows(data)
 
 
-def csv_to_json(csv_path: str, json_path: str) -> None:
+def csv_to_json(csv_path: str | Path, json_path: str | Path) -> None:
     """
     Convert CSV into JSON (list of dicts).
 
@@ -46,14 +55,30 @@ def csv_to_json(csv_path: str, json_path: str) -> None:
     json.dump(..., ensure_ascii=False, indent=2)
     """
 
-    csv_path_path = Path(csv_path)
-    with csv_path_path.open(encoding=ENCODING) as f:
+    csv_path = Path(csv_path)
+
+    if csv_path.suffix != ".csv":
+        raise ValueError('csv file must have ".csv" extenstion')
+
+    json_path = Path(json_path)
+
+    if json_path.suffix != ".json":
+        raise ValueError('json file must have ".json" extenstion')
+
+
+    with csv_path.open(encoding=ENCODING) as f:
         r = csv.DictReader(f) # fieldnames omitted, so first row values must be fieldnames
+
+        if not r.fieldnames:
+            raise ValueError("No fieldnames in csv.")
+
+        if not any(r.fieldnames):
+            raise ValueError("Empty fieldnames in csv.")
+
         data = list(r) # list of dicts
 
     if not data:
         raise ValueError("Empty csv or missing column names")
 
-    json_path_path = Path(json_path)
-    with json_path_path.open("w", encoding=ENCODING) as f:
+    with json_path.open("w", encoding=ENCODING) as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
