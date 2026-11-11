@@ -1,170 +1,231 @@
 # ЛР10 — Структуры данных: Stack, Queue, Linked List и бенчмарки
 
-> **Цель:** реализовать базовые структуры данных (стек, очередь, связный список) **без классов**,
-> сравнить их производительность и научиться думать в терминах асимптотики (O(1), O(n)).  
-> Единственное исключение — узел списка `Node`: это запись из двух полей, а не ООП.
+# Задание A. Стек и очередь (`src/lab10/structures.py`)
 
----
+Классы ене используются. Функции принимают структуру на вход первым аргументом.
 
-## Результат ЛР
 
-После выполнения ЛР10 в репозитории должны появиться:
+## Стек
 
-### `src/lab10/structures.py`
+Структура данных «стек» (LIFO) на базе `list`.
 
-Реализация:
-- **стек** — набор функций над `list`:
-  `stack_push`, `stack_pop`, `stack_peek`, `stack_is_empty`
-- **очередь** — набор функций над `collections.deque`:
-  `queue_enqueue`, `queue_dequeue`, `queue_peek`, `queue_is_empty`
-- `is_balanced(s: str) -> bool` — проверка скобочной последовательности через стек
-
----
-
-### `src/lab10/linked_list.py`
-Реализация:
-- `class Node` — узел односвязного списка (только `__init__`)
-- функции над **односвязным списком**: `ll_from_list`, `ll_to_list`, `ll_length`, `ll_prepend`,
-  `ll_append`, `ll_insert`, `ll_remove`, `ll_reverse`, `ll_repr`
-
----
-
-### `src/lab10/bench.py`
-
-Бенчмарки на `timeit`: очередь на `list` против `deque`, вставка в начало `list` против `ll_prepend`.
-Результат — таблицей в консоль и в `data/lab10/bench.csv`.
-
----
-
-### `lab10/README.md`
-
-Отчёт по ЛР10 должен содержать:
-
-- краткую теорию:
-  - что такое стек / очередь / связный список
-  - типичные операции и их сложность
-- описание реализованных функций **с примерами использования**
-- выводы по бенчмаркам:
-  - какая структура медленнее/быстрее и **почему**
-
----
-
-### `images/lab10/`
-
-Скриншоты:
-- примеры использования структур в интерпретаторе через `python -m`
-- `ll_repr` до и после `ll_reverse`
-- таблица бенчмарка
-
----
-
-## Рекомендуемая структура репозитория
-
-```text
-python_labs/
-├─ README.md
-├─ src/
-│   ├─ lab08/
-│   ├─ lab09/
-│   └─ lab10/
-│       ├─ structures.py      # стек и очередь + is_balanced
-│       ├─ linked_list.py     # Node + функции ll_*
-│       └─ bench.py           # timeit
-├─ data/
-│   └─ lab10/
-│       └─ bench.csv
-└─ images/
-    └─ lab10/
+### `stack_create() -> list`
+``` python
+    return list()
 ```
 
-## Теоретическая часть
-[клииик](./THEORY.md)
+### `stack_from_list(l: list) -> list`
+Десериализация. Элемент в конце списка l[-1] становится на вершину стека.
 
-Коротко о главном для этой лабы:
+``` python
+    st = stack_create()
+    for value in l:
+        stack_push(st, value)
+```
 
-- **Стек** (LIFO) на `list`: `append`/`pop` с конца — O(1). Вершина — последний элемент, `data[-1]`.
-- **Очередь** (FIFO): `list.pop(0)` сдвигает все элементы — O(n). `collections.deque` снимает с любого конца за O(1).
-- **Связный список**: узлы лежат в памяти где попало и связаны ссылками. Вставка в начало — O(1),
-  доступ по индексу — O(n), потому что до i-го узла нужно дойти от головы.
-- **Голова может смениться.** `ll_prepend` создаёт новый первый узел — поэтому все функции,
-  которые могут изменить голову, **возвращают новую голову**, и вызывать их нужно как `head = ll_prepend(head, x)`.
-  Это то же самое правило «имя → объект» из Л1 и Л3, только теперь оно работает на вас.
+### `stack_to_list(st: list) -> list`
+Сериализация.
 
-## Задание
+``` python
+    l = list()
+    while not stack_is_empty(st):
+        l.append(stack_pop(st))
+    l = l.reverse()
+    return l
+```
 
-### A. Реализовать стек и очередь (`src/lab10/structures.py`)
+### `stack_push(st, item) -> None`  
+Добавить элемент на вершину стека.
+``` python
+    st.append(item)
+```
 
-Нужно реализовать два набора функций и одну задачу на стек.
+### `stack_pop(st) -> Any`  
+Снять верхний элемент стека и вернуть его. Если стек пуст — поднимается исключение `EmptyStackError`
 
-#### Стек
+``` python
+    if len(st) == 0:
+        raise EmptyStackError("Stack is empty")
 
-**Назначение:** структура данных «стек» (LIFO) на базе `list`.
+    return st.pop()
+```
 
-**Представление:**
+### `stack_peek(st) -> Any | None`  
+Вернуть верхний элемент **без удаления**. Если стек пуст — поднимается исключение `EmptyStackError`
 
-- обычный `list`; вершина стека — последний элемент списка (`st[-1]`).
-  Создание стека — `st = []`.
+``` python
+    if stack_is_empty(st):
+        raise EmptyStackError("Stack is empty")
 
-**Функции (минимум):**
+    return st[-1]
+```
 
-- `stack_push(st, item) -> None`  
-  Добавить элемент на вершину стека.
+### `stack_is_empty(st) -> bool`  
+Вернуть `True`, если стек пуст, иначе `False`.
 
-- `stack_pop(st) -> Any`  
-  Снять верхний элемент стека и вернуть его.  
-  Если стек пуст — выбросить понятное исключение (`IndexError` с вменяемым сообщением, а не голое `pop from empty list`).
+``` python
+    return not st
+```
 
-- `stack_peek(st) -> Any | None`  
-  Вернуть верхний элемент **без удаления**.  
-  Если стек пуст — вернуть `None` (или тоже бросать исключение, но тогда это нужно описать в README).
 
-- `stack_is_empty(st) -> bool`  
-  Вернуть `True`, если стек пуст, иначе `False`.
+## Задача на стек
+
+### `is_balanced(s: str) -> bool`  
+Правильная ли скобочная последовательность для скобок `()`, `[]`, `{}`.
+
+Остальные символы игнорируются.
+``` python
+    st = stack_create()
+    bracket_pair = {
+        ')': '(',
+        ']': '[',
+        '}': '{'
+    }
+    for c in s:
+        if c in '([{':
+            stack_push(st, c)
+        elif c in ')]}':
+            if stack_is_empty(st) or stack_pop(st) != bracket_pair[c]:
+                return False
+
+    return stack_is_empty(st)
+```
+
+### `rpn(expr: str) -> float`
+— калькулятор обратной польской записи на стеке: `"3 4 + 2 *"` → `14.0`
+
+Запись считывается последовательно. Операнды записываются на стек. Если встретился оператор, пробуем взять нужное количество операндов из стека и применить оператор к ним. Результат записывается в тот же стек.
+
+``` python
+    unary_operators = ['~']
+    binary_operators = ['+', '-', '*', '/', '%', '**', '//']
+
+    values_st = stack_create()
+
+    for token in expr.split():
+        if token in unary_operators:
+
+            try:
+                a = stack_pop(values_st)
+                assert isinstance(a, float)
+            except EmptyStackError:
+                raise ValueError(f"Invalid rpn: no operand for '{token}' operator")
+
+            match token:
+                case '~':
+                    stack_push(values_st, -a)
+
+        elif token in binary_operators:
+
+            try:
+                a = stack_pop(values_st)
+                assert isinstance(a, float)
+                b = stack_pop(values_st)
+                assert isinstance(b, float)
+
+            except EmptyStackError:
+                raise ValueError(f"Invalid rpn: no operand for '{token}' operator")
+
+            match token:
+                case '+':
+                    stack_push(values_st, a+b)
+                case '-':
+                    stack_push(values_st, a-b)
+                case '*':
+                    stack_push(values_st, a*b)
+                case '/':
+                    stack_push(values_st, a/b)
+                case '%':
+                    stack_push(values_st, a%b)
+                case '**':
+                    stack_push(values_st, a**b)
+                case '//':
+                    stack_push(values_st, a//b)
+        else:
+            try:
+                stack_push(values_st, float(token))
+            except ValueError:
+                raise ValueError(f'Non-convertable to float token "{token}"')
+
+    try:
+        result = stack_pop(values_st)
+        if not stack_is_empty(values_st):
+            raise ValueError("Not all tokens used")
+
+        assert isinstance(result, float)
+
+        return result
+    except EmptyStackError:
+        raise ValueError("No values in the rpn")
+```
+
+## Очередь
+
+Структура данных «очередь» (FIFO) на базе `collections.deque`.
+
+### `queue_create() -> deque`
+``` python
+    return deque()
+```
+
+### `queue_from_list(l: list) -> deque`
+``` python
+    q = queue_create()
+    for value in l:
+        queue_enqueue(q, value)
+    return q
+```
+
+### `queue_to_list(q: deque) -> list`
+``` python
+    l = []
+    while not queue_is_empty(q):
+        l.append(queue_dequeue(q))
+```
+
+### `queue_enqueue(q, item) -> None`  
+Добавить элемент в конец очереди.
+``` python
+    q.append(item)
+```
+
+### `queue_dequeue(q) -> Any`  
+Взять элемент из начала очереди и вернуть его.  
+
+Если очередь пустая — выбрасывается исключение `EmptyQueueError`.
+```python
+    if queue_is_empty(q):
+        raise EmptyQueueError("Queue is empty")
+
+    return q.popleft()
+```
+
+### `queue_peek(q) -> Any | None`  
+Вернуть первый элемент **без удаления**.  
+
+Если очередь пустая — выбрасывается исключение `EmptyQueueError`.
+``` python
+    if queue_is_empty(q):
+        raise EmptyQueueError("Queue is empty")
+
+    return q[0]
+```
+
+### `queue_is_empty(q) -> bool`  
+Вернуть `True`, если очередь пуста.
+``` python
+    return not bool(q)
+```
 
 ---
 
-#### Очередь
+<br><br>
 
-**Назначение:** структура данных «очередь» (FIFO) на базе `collections.deque`.
-
-**Представление:**
-
-- `deque`; голова очереди — левый край, `queue_dequeue` берёт элементы слева.
-  Создание очереди — `q = deque()`.
-
-**Функции (минимум):**
-
-- `queue_enqueue(q, item) -> None`  
-  Добавить элемент в конец очереди.
-
-- `queue_dequeue(q) -> Any`  
-  Взять элемент из начала очереди и вернуть его.  
-  Если очередь пустая — выбросить понятное исключение (`IndexError`).
-
-- `queue_peek(q) -> Any | None`  
-  Вернуть первый элемент **без удаления**.  
-  Если очередь пустая — вернуть `None` (или бросить исключение, но это нужно явно описать).
-
-- `queue_is_empty(q) -> bool`  
-  Вернуть `True`, если очередь пуста.
-
----
-
-#### Задача на стек
-
-- `is_balanced(s: str) -> bool`  
-  Правильная ли скобочная последовательность для скобок `()`, `[]`, `{}`.
-  Остальные символы игнорируются.
-  `"([]{})"` → `True`, `"([)]"` → `False`, `"(("` → `False`, `""` → `True`.
-  Решение — одним проходом со стеком; без стека (удалять пары, пока удаляются) — не засчитывается.
-
----
-
-### B. Реализовать односвязный список (`src/lab10/linked_list.py`)
+# Задание B. Односвязный список (`src/lab10/linked_list.py`)
 
 Нужно реализовать узел и функции над списком.
 
-#### `class Node`
+## `class Node`
 
 **Назначение:** узел односвязного списка. Единственный класс в семестре — и у него только конструктор.
 
@@ -178,125 +239,252 @@ class Node:
     def __init__(self, value, next=None):
         self.value = value
         self.next = next
+    def __reduce__(self):
+        """ Serialize and deserialize """
+        return ll_from_list, (ll_to_list(self),)
 ```
 
-Никаких других методов у `Node` быть не должно. Это запись из двух полей; всё поведение — в функциях ниже.
+- `__reduce__` — метод оказался необходим для бенчмарка. Сериализация и десериализация структуры для передачи в подпроцесс (pickle). Без `reduce` сериализация производится рекурсивно, на больших даных стек рекурсии переполняется.
+
+Никаких других методов у `Node` нет. Это запись из двух полей; всё поведение — в функциях ниже.
 
 ---
 
-#### Функции над списком
+## Функции над списком
 
 **Представление:** список задаётся **ссылкой на голову** — `Node` или `None` для пустого списка.
 
-**Функции (минимум):**
 
-- `ll_from_list(values) -> Node | None`  
-  Собрать список из обычного `list`. `ll_from_list([])` → `None`.
+### `ll_copy(head: Node | None) -> Node | None`
+``` python
+    new_head = Node(head.value, None)
+    cur = new_head
+    while head.next is not None:
+        cur.next = Node(head.next.value, None)
+        cur = cur.next
+        head = head.next
 
-- `ll_to_list(head) -> list`  
-  Обратно: значения от головы к хвосту.
+    return new_head
+```
 
-- `ll_length(head) -> int`  
-  Количество узлов, проходом от головы.
-
-- `ll_prepend(head, value) -> Node`  
-  Добавить элемент в начало за `O(1)`. Возвращает новую голову.
-
-- `ll_append(head, value) -> Node`  
-  Добавить элемент в конец. Допустимо `O(n)` проходом от `head`. Возвращает голову (для пустого списка — новую).
-
-- `ll_insert(head, idx: int, value) -> Node`  
-  Вставить элемент по индексу `idx`.  
-  Требования:
-  - допускается вставка в начало (`idx == 0`) и в конец (`idx == ll_length(head)`);
-  - при индексе вне диапазона `[0, len]` — выбросить `IndexError`.
-
-- `ll_remove(head, value) -> Node | None` **или** `ll_remove_at(head, idx: int) -> Node | None`  
-  На выбор:
-  - либо удалить **первое вхождение** значения `value` (если нет — `ValueError`, как у `list.remove`, либо ничего не делать, задокументировав поведение);
-  - либо удалить элемент по индексу `idx` (при некорректном индексе — `IndexError`).
-
-- `ll_reverse(head) -> Node | None`  
-  Развернуть список **на месте**, итеративно, тремя ссылками `prev / cur / nxt`.
-  Копировать значения в `list` и собирать список заново — нельзя.
-
-- `ll_repr(head) -> str`  
-  Возвращает строковое представление, например:  
-  `[1] -> [2] -> [3] -> None`; для пустого списка — `None`.
-
----
-
-### C. Бенчмарки (`src/lab10/bench.py`)
-
-Через `timeit` измерить на `n = 10_000` и `n = 100_000`:
-
-- очередь: `n` раз `list.pop(0)` против `n` раз `deque.popleft()`
-- вставка в начало: `n` раз `list.insert(0, x)` против `n` раз `head = ll_prepend(head, x)`
-
-Результат — таблица в консоль (`операция, n, list, deque/ll, во сколько раз`) и `data/lab10/bench.csv`
-(через `write_csv` из ЛР4). В README — два абзаца: почему `pop(0)` медленный и почему
-`ll_prepend` не медленнее с ростом `n`.
-
----
-
-**(★) Дополнительное задание:**
-
-- `ll_middle(head) -> Node | None` — средний узел за **один** проход двумя указателями (быстрый и медленный)
-- `ll_has_cycle(head) -> bool` — есть ли цикл, алгоритм Флойда, без множества посещённых
-- двусвязный список: `class DoublyNode` с полями `value`, `prev`, `next` (тоже только `__init__`) и функции
-  `dll_from_list`, `dll_append`, `dll_repr` с выводом вида:
-  ```text
-    None <- [A] <-> [B] <-> [C] -> None
-  ```
-- `rpn(expr: str) -> float` — калькулятор обратной польской записи на стеке: `"3 4 + 2 *"` → `14.0`
-
-## Пример кода
-
-### `structures.py`
-
-[Смотреть тут](./code_examples/structures.py)
-
-
-### `linked_list.py`
-
-[Смотреть тут](./code_examples/linked_list.py)
-
-
-### `bench.py`
+### `ll_from_list(values: list) -> Node | None`
+Собрать список из обычного `list`
 
 ``` python
-import timeit
-from collections import deque
+    head = Node(values[0], None)
+    cur = head
+    for value in values[1:]:
+        cur.next = Node(value, None)
+        cur = cur.next
 
+    return head
+```
 
-def bench_queue(n):
-    lst = list(range(n))
-    dq = deque(range(n))
-    t_list = timeit.timeit(lambda: lst.pop(0), number=n)
-    # TODO: то же для dq.popleft(); вернуть оба времени
+### `ll_to_list(head: Node | None) -> list`
+Обратно: значения от головы к хвосту.
+
+``` python
+    l = list()
+    while head is not None:
+        l.append(head.value)
+        head = head.next
+
+    return l
+```
+
+### `ll_length(head: Node | None) -> int`
+Считает длину за O(n). Лучше, разумеется хранить длину полем.
+
+``` python
+    counter = 0
+    while head is not None:
+        counter += 1
+        head = head.next
+
+    return counter
+```
+
+### `ll_prepend(head: Node | None, value) -> Node`
+Добавить элемент в начало за `O(1)`. Возвращает новую голову.
+
+``` python
+    return Node(value, head)
+```
+
+### `ll_append(head: Node | None, value) -> Node`
+Добавить элемент в конец за `O(n)` проходом от `head`. Возвращает голову (для пустого списка — новую).
+
+``` python
+    if head is None:
+        return Node(value)
+
+    cur = head
+
+    while cur.next is not None:
+        cur = cur.next
+
+    cur.next = Node(value)
+
+    return head
 ```
 
 
-## Что сдавать
-1. Код
- - `src/lab10/structures.py` - корректные функции стека и очереди, `is_balanced`.
- - `src/lab10/linked_list.py` -  `Node` и рабочие функции `ll_*`.
- - `src/lab10/bench.py` - бенчмарки.
+### `ll_insert(head: Node | None, idx: int, value) -> Node`
+Вставить элемент по индексу `idx`.
 
-2. **README**
- - Общий `README.md` для всего репозитория
- - `lab10/README.md` для ЛР-10
+Допускается вставка в начало (`idx == 0`) и в конец (`idx == ll_length(head)`);
 
-3. **Скриншоты и данные**
- - `images/lab10/`
- - `data/lab10/bench.csv`
+При индексе вне диапазона `[0, len]` — `IndexError`.
 
-## Критерии допуска
--   Лабораторная выполнена полностью\
--   README оформлен в стиле прошлых работ\
--   Из классов — только `Node` (и `DoublyNode` в ★), у обоих только `__init__`\
+``` python
+    if idx == 0:
+        return ll_prepend(head, value)
 
-## Критерии приемки  
- - Корректность и аккуратность стека/очереди и `is_balanced` — **20%**  
- - Корректность функций связного списка — **20%**  
- - Ответы на вопросы по теории — **60%** 
+    if head is None:
+        raise IndexError("index out of range")
+
+    i, cur = 1, head
+
+    while cur.next is not None and i != idx:
+        cur = cur.next
+        i += 1
+
+    if i != idx:
+        raise IndexError("index out of range")
+
+    cur.next = Node(value, cur.next)
+
+    return head
+```
+
+### `ll_remove(head: Node | None, value) -> Node | None`
+Удалить первое вхождение значения. Если не найдено, ничего не происходит.
+
+``` python
+    if head is None:
+        return None
+
+    if head.value == value:
+        return head.next
+
+    cur = head
+
+    while cur.next is not None and cur.next.value != value:
+        cur = cur.next
+
+    if cur.next is not None:
+        cur.next = cur.next.next
+
+    return head
+```
+
+### `ll_remove_at(head: Node | None, idx: int) -> Node | None`
+Удалить элемент по индексу `idx` (при некорректном индексе — `IndexError`).
+
+``` python
+    if head is None:
+        raise IndexError("the linked list is empty")
+
+    if idx == 0:
+        return head.next
+
+    i, cur = 1, head
+
+    while cur.next is not None and i != idx:
+        cur = cur.next
+        i += 1
+
+    if i != idx:
+        raise IndexError("index out of range")
+
+    # Deletion
+    if cur.next is not None:
+        cur.next = cur.next.next
+
+    return head
+```
+
+### `ll_reverse(head: Node | None) -> Node | None`
+Развернуть список **на месте**, итеративно, тремя ссылками `prev / cur / nxt`.
+
+``` python
+    if head is None:
+        return None
+
+    prev = None
+    cur = head
+    nxt = head.next
+
+    while nxt is not None:
+        cur.next = prev
+
+        prev = cur
+        cur = nxt
+        nxt = cur.next
+
+    return cur
+```
+
+### `ll_repr(head: Node | None) -> str`
+Возвращает строковое представление, например:  `[1] -> [2] -> [3] -> None`; для пустого списка — `None`.
+
+``` python
+    l = [ f"[{v}]" for v in ll_to_list(head) ]
+    l.append("None")
+    return ' -> '.join(l)
+```
+
+### `ll_middle(head: Node | None) -> Node | None`
+— средний узел за **один** проход двумя указателями (быстрый и медленный)
+
+``` python
+    if head is None:
+        return None
+
+    slow, fast = head, head
+
+    while fast.next is not None and fast.next.next is not None:
+        slow = slow.next # type: ignore
+        fast = fast.next.next
+
+    return slow
+```
+
+### `ll_has_cycle(head: Node | None) -> bool`
+— есть ли цикл, алгоритм Флойда, без множества посещённых
+
+``` python
+    slow, fast = head, head
+
+    while fast is not None and fast.next is not None:
+        slow = slow.next # type: ignore
+        fast = fast.next.next
+        
+        if fast == slow:
+            return True
+
+    return False
+```
+
+<br><br>
+
+# Задание B* двусвязный список
+
+Все те же методы, но с двумя ссылками в ноде.
+
+``` python
+class DoublyNode:
+    def __init__(self, value, prev: DoublyNode | None=None, next: DoublyNode | None=None):
+        self.value = value
+        self.prev = prev
+        self.next = next
+```
+
+<br><br>
+
+# Задание C. Бенчмарки (`src/lab10/bench.py`)
+
+Использован тот же бенчмарк, что и для `lab07`
+
+![bench_run](../../misc/img/lab10/bench_run.png)
+![plot](../../misc/img/lab10/plot.png)

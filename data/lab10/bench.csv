@@ -1,0 +1,5 @@
+Algorithm,Complexity,n=10^4,n=10^5
+Dequeue (deque.popleft),O(1),0.00000036,0.00000035
+list.pop(0),O(n),0.00000236,0.00002550
+ll_prepend,O(1),0.00000066,0.00000066
+"list.insert(0, x)",O(n),0.00000393,0.00003363
