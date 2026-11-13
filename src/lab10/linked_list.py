@@ -172,16 +172,15 @@ def ll_reverse(head: Node | None) -> Node | None:
 
     prev = None
     cur = head
-    nxt = head.next
 
-    while nxt is not None:
+    while cur is not None:
+        nxt = cur.next
         cur.next = prev
 
         prev = cur
         cur = nxt
-        nxt = cur.next
 
-    return cur
+    return prev
 
 
 def ll_repr(head: Node | None) -> str:

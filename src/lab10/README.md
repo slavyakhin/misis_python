@@ -67,6 +67,7 @@
     return not st
 ```
 
+![stack_run](../../misc/img/lab10/stack_run.png)
 
 ## Задача на стек
 
@@ -90,6 +91,8 @@
 
     return stack_is_empty(st)
 ```
+
+![is_balanced_leetcode](../../misc/img/lab10/is_balanced_leetcode.png)
 
 ### `rpn(expr: str) -> float`
 — калькулятор обратной польской записи на стеке: `"3 4 + 2 *"` → `14.0`
@@ -159,6 +162,8 @@
         raise ValueError("No values in the rpn")
 ```
 
+![rpn_run](../../misc/img/lab10/rpn_run.png)
+
 ## Очередь
 
 Структура данных «очередь» (FIFO) на базе `collections.deque`.
@@ -216,6 +221,8 @@
 ``` python
     return not bool(q)
 ```
+
+![queue_run](../../misc/img/lab10/queue_run.png)
 
 ---
 
@@ -413,17 +420,18 @@ class Node:
 
     prev = None
     cur = head
-    nxt = head.next
 
-    while nxt is not None:
+    while cur is not None:
+        nxt = cur.next
         cur.next = prev
 
         prev = cur
         cur = nxt
-        nxt = cur.next
 
-    return cur
+    return prev
 ```
+
+![ll_reverse_run](../../misc/img/lab10/ll_reverse_run.png)
 
 ### `ll_repr(head: Node | None) -> str`
 Возвращает строковое представление, например:  `[1] -> [2] -> [3] -> None`; для пустого списка — `None`.
@@ -449,6 +457,8 @@ class Node:
 
     return slow
 ```
+
+![ll_run](../../misc/img/lab10/ll_run.png)
 
 ### `ll_has_cycle(head: Node | None) -> bool`
 — есть ли цикл, алгоритм Флойда, без множества посещённых
@@ -487,4 +497,11 @@ class DoublyNode:
 Использован тот же бенчмарк, что и для `lab07`
 
 ![bench_run](../../misc/img/lab10/bench_run.png)
+
+На графике наглядно изображена разница между функциями, работающими за константное время **O(1)** и за линию **O(n)**.
+
+Список в *python* реализован как динамический массив указателей. Вставка и удаление элемента имеет асимптотику O(n), так как необходимо (или может понадобиться) перемещать каждый элемент списка. Хотя в случае удаления или вставки последнего элемента, функция может отработать быстро, если не придется переаллоцировать остальной массив, что может быть похоже на O(1).
+
+Для связного списка же аллоцируют один узел в любом месте памяти за O(1). Однако приходится жертвовать количеством памяти на один элемент, ведь каждый из них хранит ссылку на следующий (или предыдущий).
+
 ![plot](../../misc/img/lab10/plot.png)

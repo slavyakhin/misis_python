@@ -116,10 +116,10 @@ def rpn(expr: str) -> float:
         elif token in binary_operators:
 
             try:
-                a = stack_pop(values_st)
-                assert isinstance(a, float)
                 b = stack_pop(values_st)
                 assert isinstance(b, float)
+                a = stack_pop(values_st)
+                assert isinstance(a, float)
 
             except EmptyStackError:
                 raise ValueError(f"Invalid rpn: no operand for '{token}' operator")
