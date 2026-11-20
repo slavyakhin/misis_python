@@ -1,14 +1,11 @@
 import csv
-import timeit
 import argparse
-import multiprocessing as mp
 import threading
-from multiprocessing.connection import Connection 
 from pathlib import Path
 import random
-from collections.abc import Sequence, Callable
 from src.lib.fmt_table import recs_to_rows, print_table
 from src.lib.stopwatch import stopwatch_worker
+from src.lib.benchmark import start_benchmark
 from src.lab04.io_txt_csv import write_csv
 from src.lab07.sorting import bubble_sorted, insertion_sorted, selection_sorted, merge_sorted, counting_sorted
 from src.lab07.search import linear_search, binary_search, two_sum_brute, two_sum_fast
@@ -46,110 +43,6 @@ def read_numbers(path: Path) -> list:
             return [int(row[headers[0]]) for row in reader]
         else:
             return []
-
-
-def _timeit_worker(
-    writer_conn: Connection,
-    fn: Callable,
-    reqs: Sequence[tuple[tuple, dict]], # Sequence of pairs (args, kwargs)
-    number: int,
-    repeat: int,
-) -> None:
-    """
-    Subprocess execute target function.
-    Call timeit for each test case.
-    Put sum of best times in queue.
-    """
-
-    with writer_conn: # Close connection automatically
-        total_time = 0
-        for args, kwargs in reqs:
-            times = timeit.repeat(lambda: fn(*args, **kwargs), number=number, repeat=repeat)
-            best = min(times) / number
-            total_time += best
-            
-        writer_conn.send(total_time)
-
-
-def exec_worker_with_timeout(
-    worker: Callable,
-    args: tuple = (),
-    kwargs: dict = {},
-    timeout: float | int = TIMEOUT,
-):
-    """
-    Exec fn worker, terminate after timeout exceeds and raise TimeoutError.
-
-    Return value from the pipe
-    """
-
-    reader_conn, writer_conn = mp.Pipe(duplex=False)
-
-    process = mp.Process(target=worker, args=(writer_conn, *args), kwargs=kwargs)
-
-    try:
-        process.start()
-        writer_conn.close()
-
-        if not reader_conn.poll(timeout):
-            raise TimeoutError("Timeout exceeded.")
-
-        try:
-            result = reader_conn.recv()
-        except EOFError:
-            raise RuntimeError("Worker process crashed before sending data.")
-
-        return result
-
-    finally:
-        reader_conn.close()
-        writer_conn.close()
-
-        if process.is_alive():
-            process.terminate()
-            process.join(timeout=1)
-
-        if process.is_alive():
-            process.kill()
-
-        process.join()
-
-
-def bench(
-    fn: Callable,
-    reqs: Sequence[tuple[tuple, dict]], # Sequence of pairs (args, kwargs)
-    repeat: int = REPEAT,
-    number: int = NUMBER,
-    timeout: float | int = TIMEOUT,
-) -> float | None:
-    """
-    Benchmark func.
-    Return elapsed time.
-
-    If timeout exceeds, returns None.
-    """
-
-    try:
-        t = exec_worker_with_timeout(
-            worker=_timeit_worker,
-            kwargs={
-                "fn": fn,
-                "reqs": reqs,
-                "number": number,
-                "repeat": repeat
-            },
-            timeout=timeout
-            )
-        return t
-    except TimeoutError:
-        return None
-
-
-def _fmt_time(t, timeout, spec=".2f") -> str:
-    """
-    Format time results
-    """
-    return format(t, spec) if t is not None else f">{timeout:{spec}}"
 
 
 def main():
@@ -465,28 +358,7 @@ def main():
     stopwatch_thread = threading.Thread(target=stopwatch_worker, args=(stop_event,), daemon=True)
     stopwatch_thread.start()
 
-    result_recs = [dict() for _ in range(len(tests_table))]
-
-    for i, line in enumerate(tests_table):
-        result_recs[i]["Algorithm"] = line["name"]
-        result_recs[i]["Complexity"] = line["complexity"]
-
-        print(f'Benching "{line["name"]}"...')
-
-        for j, case in enumerate(line["cases"]):
-            print(f'case {j}: "{case["name"]}"...')
-
-            assert isinstance(case, dict)
-            t = bench(
-                fn=line["fn"],
-                reqs=case.get("reqs") or [(case.get("args", ()), case.get("kwargs", {}))],
-                number=case.get("number", NUMBER),
-                repeat=case.get("repeat", REPEAT),
-                timeout=case.get("timeout", args.timeout),
-            )
-
-            t_str = _fmt_time(t, args.timeout, spec=f".{args.precision}f")
-            result_recs[i][case["name"]] = t_str
+    result_recs = start_benchmark(tests_table, args.timeout, args.precision)
 
     stop_event.set()
     stopwatch_thread.join()

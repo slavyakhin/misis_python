@@ -1,5 +1,5 @@
-## 8/10 лаб загружены
+## 10/10 лаб загружено
 
 <p align="center">
-  <img src="../misc/img/general_material/traveling.gif" />
+  <img src="../misc/img/general_material/almost_done.gif" />
 </p>

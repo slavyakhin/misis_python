@@ -1,6 +1,7 @@
 from datetime import date
+from src.lib.ru_str import age_ru_word
 
-STUDENT_FIELDS = {"fio", "birthdate", "group", "gpa"}
+STUDENT_FIELDS = dict.fromkeys(("fio", "birthdate", "group", "gpa"))
 
 
 def make_student(fio: str, birthdate: str, group: str, gpa: int | float) -> dict:
@@ -60,7 +61,7 @@ def validate_student(rec: dict) -> None:
     if not (0 <= rec["gpa"] <= 5):
         raise ValueError("gpa must be in range [0, 5]")
 
-    if rec.keys() != STUDENT_FIELDS:
+    if rec.keys() != STUDENT_FIELDS.keys():
         raise ValueError("unwanted fields provided")
 
 
@@ -88,22 +89,29 @@ def format_student(rec: dict) -> str:
     Stringer for student rec.
     """
 
+    if not isinstance(rec, dict):
+        raise TypeError("rec must be dict")
+
     fio_list = list(rec["fio"].split())
     name = f'{fio_list[0].capitalize()} {"".join(map(lambda x: x[0].upper()+'.', fio_list[1:]))}'
 
     group = rec["group"].strip()
 
     age = student_age(rec)
+    age_str = age_ru_word(age)
 
     gpa = rec["gpa"]
 
-    return f'{name} ({group}), {age} лет, GPA {gpa:2f}'
+    return f'{name} ({group}), {age} {age_str}, GPA {gpa:.2f}'
 
 
 def student_to_dict(rec: dict) -> dict:
     """
     Copy student rec.
     """
+
+    if not isinstance(rec, dict):
+        raise TypeError("rec must be dict")
 
     # references to immutable object
     # when new vars are modified, a new objects will be created
@@ -125,6 +133,10 @@ def student_from_dict(d: dict) -> dict:
     Casts types.
     Validates rec.
     """
+
+    if not isinstance(d, dict):
+        raise TypeError("d must be dict")
+
     _validate_student_fields(d)
 
     # make_student calls validation
@@ -140,6 +152,10 @@ def update_student(rec: dict, **fields) -> dict:
     """
     New record with updated fields.
     """
+
+    if not isinstance(rec, dict):
+        raise TypeError("rec must be dict")
+
     for key in fields.keys():
         if not key in STUDENT_FIELDS:
             raise KeyError(f"unknown key provided: {key}")
